@@ -1,0 +1,45 @@
+version: 2
+
+models:
+  - name: bronze_date
+    config:
+      materialized: view
+
+  - name: bronze_products
+    config:
+      materialized: view
+
+  - name: bronze_sale
+    columns:
+      - name: sales_id
+        data_tests:
+          - unique
+          - not_null
+
+      - name: gross_amount
+        data_tests:
+        - generic_non_negative
+
+  - name: bronze_store
+    columns:  # <- Exactly 4 spaces from start (2 under name:)
+      - name: store_sk
+        data_tests:
+          - unique
+          - not_null
+
+      - name: store_name
+        data_tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - MegaMart Manhattan
+                  - MegaMart Brooklyn
+                  - MegaMart Austin
+                  - MegaMart San Jose
+                  - MegaMart Toronto
+
+      - name: country
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['USA', 'Canada']

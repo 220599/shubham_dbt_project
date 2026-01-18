@@ -1,0 +1,19 @@
+shubham_dbt_project:
+  outputs:
+    dev:
+      catalog: dbt_t
+      host: 
+      http_path: /sql/1.0/warehouses/071d93c77fdf5fb2
+      schema: defsult
+      threads: 1
+      token: 
+      type: databricks
+    prod:
+      catalog: dbt_t_prod
+      host: 
+      http_path: /sql/1.0/warehouses/071d93c77fdf5fb2
+      schema: defsult
+      threads: 1
+      token: 
+      type: databricks
+  target: dev
