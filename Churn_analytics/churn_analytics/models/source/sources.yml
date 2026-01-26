@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: source
+    database: 'churn_analytics'
+    schema: source 
+    tables:
+      - name: accounts
+      - name: subscriptions
+      - name: usage

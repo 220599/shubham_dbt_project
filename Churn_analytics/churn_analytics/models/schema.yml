@@ -1,0 +1,11 @@
+models:
+  - name: fct_account_metrics
+    columns:
+      - name: account_name
+        data_tests:
+          - unique
+          - not_null  # Fixed the typo
+      - name: plan_tier
+        data_tests:
+          - accepted_values:
+              values: ['PRO', 'BASIC', 'ENTERPRISE']

@@ -1,0 +1,53 @@
+version: 2
+
+models:
+  - name: fct_subscriptions
+    description: >
+      Silver layer: Subscription facts with revenue validation and churn tracking.
+      
+      **Quality Checks:**
+      - Removes duplicate subscriptions
+      - Validates subscription_end_date >= subscription_start_date
+      - Ensures ARR = MRR × 12 for monthly plans
+      - Ensures ARR = MRR for annual plans
+      - Removes records with negative revenue or seats
+      - Flags paid plans with $0 MRR
+      
+      **Transformations:**
+      - Type casting (dates, decimals, booleans)
+      - Calculates subscription_length_days (only if ended)
+      - Handles NULL end_date as active subscription
+      - Partitioned by start_date for performance
+    
+    columns:
+      - name: subscription_id
+        description: Unique subscription identifier
+        tests:
+          - unique
+          - not_null
+      
+      - name: account_id
+        description: Foreign key to accounts
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_accounts')
+              field: account_id
+      
+      - name: subscription_start_date
+        description: Subscription start date
+        tests:
+          - not_null
+      
+      - name: subscription_end_date
+        description: Subscription end date (NULL = active)
+      
+      - name: mrr_amount
+        description: Monthly Recurring Revenue (USD)
+        tests:
+          - not_null
+      
+      - name: arr_amount
+        description: Annual Recurring Revenue (USD)
+        tests:
+          - not_null

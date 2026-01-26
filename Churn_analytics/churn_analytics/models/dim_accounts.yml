@@ -1,0 +1,50 @@
+version: 2
+
+models:
+  - name: dim_accounts
+    description: >
+      Silver layer: Account dimension with deduplication and data quality checks.
+      
+      **Quality Checks:**
+      - Removes duplicate account records
+      - Validates required fields (account_id, signup_date, country)
+      - Ensures signup_date is not in future
+      - Validates plan_tier is BASIC/PRO/ENTERPRISE
+      - Removes records with negative seats
+      
+      **Transformations:**
+      - Standardizes text fields (UPPER, TRIM)
+      - Replaces NULL industry/country with 'Unknown'
+      - Type casting for all fields
+    
+    columns:
+      - name: account_id
+        description: Unique account identifier
+        tests:
+          - unique
+          - not_null
+      
+      - name: account_name
+        description: Company name (trimmed)
+      
+      - name: industry
+        description: Industry (UPPER, defaults to 'Unknown')
+        tests:
+          - not_null
+      
+      - name: country
+        description: Country (UPPER, defaults to 'Unknown')
+        tests:
+          - not_null
+      
+      - name: plan_tier
+        description: Plan tier
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['BASIC', 'PRO', 'ENTERPRISE', 'UNKNOWN']
+      
+      - name: has_churned
+        description: Has account ever churned? (Boolean)
+        tests:
+          - not_null

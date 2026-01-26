@@ -1,0 +1,62 @@
+version: 2
+
+models:
+  - name: churn_risk_metrics
+    description: >
+      Gold layer: Churn risk prediction model scoring accounts 0-100 based on behavioral patterns.
+      
+      **Scoring Components:**
+      - Engagement Quality (0-30): Feature adoption breadth + usage consistency
+      - Lifecycle Progression (0-25): Tenure + plan change trajectory
+      - Behavior Patterns (0-25): Trial conversion + renewal health + error signals
+      - Revenue Stability (0-20): MRR integrity checks
+      
+      **Risk Levels:**
+      - CRITICAL (75-100): Immediate intervention needed
+      - HIGH (55-74): Proactive engagement required
+      - MEDIUM (35-54): Monitor closely
+      - LOW (15-34): Standard support
+      - VERY_LOW (0-14): Healthy, retention focus
+      
+      **Why Historical Analysis Works:**
+      - Uses engagement_span_days (not current date)
+      - Calculates activity_density_pct (consistency metric)
+      - Analyzes behavioral patterns, not recency
+      - Attributes churn reasons for root cause analysis
+    
+    columns:
+      - name: account_id
+        description: Account identifier
+        tests:
+          - not_null
+      
+      - name: churn_risk_score
+        description: 0-100 churn risk score (higher = more risk)
+        tests:
+          - accepted_values:
+              values: [0, 100]
+              config:
+                compare_type: '>='
+      
+      - name: churn_risk_level
+        description: Risk classification
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'VERY_LOW']
+      
+      - name: churn_reason
+        description: Why account churned (for already churned accounts)
+        tests:
+          - accepted_values:
+              values: ['Low Feature Adoption', 'Early Exit (< 30 days)', 'Sporadic Usage', 
+                       'Downgraded then Churned', 'Trial Conversion Failed', 'Other Pattern']
+      
+      - name: recommended_action
+        description: What to do with this account
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['ANALYZE_CHURN_PATTERN', 'URGENT_HIGH_VALUE_RETENTION', 
+                       'URGENT_RETENTION', 'PROACTIVE_ENGAGEMENT', 
+                       'FEATURE_ADOPTION_TRAINING', 'TRIAL_CONVERSION_SUPPORT', 'STANDARD_SUPPORT']

@@ -1,0 +1,47 @@
+version: 2
+
+models:
+  - name: fct_feature_usage
+    description: >
+      Silver layer: Feature usage events with engagement metrics.
+      
+      **Quality Checks:**
+      - Removes duplicate usage events
+      - Ensures usage_date is not in future
+      - Removes records with negative usage_count, duration, or error_count
+      - Validates feature_name is not null
+      
+      **Transformations:**
+      - Type casting for all fields
+      - Replaces NULL error_count with 0
+      - Calculates error_rate (error_count / usage_count)
+      - Calculates avg_duration_per_usage (duration / usage_count)
+      - Identifies beta feature usage
+    
+    columns:
+      - name: usage_id
+        description: Unique usage event identifier
+        tests:
+          - unique
+          - not_null
+      
+      - name: subscription_id
+        description: Foreign key to subscriptions
+        tests:
+          - not_null
+          - relationships:
+              to: ref('fct_subscriptions')
+              field: subscription_id
+      
+      - name: feature_name
+        description: Feature name
+        tests:
+          - not_null
+      
+      - name: error_rate
+        description: Calculated error rate (errors / usage count)
+        tests:
+          - accepted_values:
+              values: [0, 0.01, 0.05, 0.1]
+              config:
+                compare_type: <=

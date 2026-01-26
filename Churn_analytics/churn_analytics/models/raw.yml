@@ -1,0 +1,85 @@
+version: 2
+
+
+
+# ============================================
+# DATA SOURCES (BRONZE LAYER)
+# ============================================
+
+sources:
+  - name: bronze
+    description: Raw data from CSV imports
+    tables:
+      - name: bronze_accounts
+        description: Raw accounts data from source system
+        columns:
+          - name: account_id
+            description: Unique account identifier
+          - name: account_name
+            description: Company name
+          - name: industry
+            description: Industry type
+          - name: country
+            description: Country
+          - name: signup_date
+            description: Account signup date
+          - name: plan_tier
+            description: Plan tier (BASIC, PRO, ENTERPRISE)
+          - name: churn_flag
+            description: Has account churned? (1/0 or true/false)
+          - name: is_trial
+            description: Is trial account? (1/0 or true/false)
+          - name: seats
+            description: Number of seats
+          - name: referral_source
+            description: How account was acquired
+
+      - name: bronze_subscriptions
+        description: Raw subscription billing data
+        columns:
+          - name: subscription_id
+            description: Unique subscription ID
+          - name: account_id
+            description: Account ID
+          - name: start_date
+            description: Subscription start date
+          - name: end_date
+            description: Subscription end date (NULL = active)
+          - name: plan_tier
+            description: Plan tier
+          - name: mrr_amount
+            description: Monthly revenue
+          - name: arr_amount
+            description: Annual revenue
+          - name: billing_frequency
+            description: MONTHLY or ANNUAL
+          - name: is_trial
+            description: Is trial subscription?
+          - name: churn_flag
+            description: Subscription ended due to churn?
+          - name: upgrade_flag
+            description: Did account upgrade?
+          - name: downgrade_flag
+            description: Did account downgrade?
+          - name: auto_renew_flag
+            description: Auto-renewal enabled?
+
+      - name: bronze_usage
+        description: Daily feature usage events
+        columns:
+          - name: usage_id
+            description: Unique usage event ID
+          - name: subscription_id
+            description: Subscription ID
+          - name: usage_date
+            description: Date of usage
+          - name: feature_name
+            description: Feature used
+          - name: usage_count
+            description: Times used that day
+          - name: usage_duration_secs
+            description: Total duration (seconds)
+          - name: error_count
+            description: Errors that day
+          - name: is_beta_feature
+            description: Is beta feature?

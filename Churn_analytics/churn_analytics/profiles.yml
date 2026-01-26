@@ -1,0 +1,11 @@
+churn_analytics:
+  outputs:
+    dev:
+      catalog: churn_analytics
+      host: dbc-4656e6df-b624.cloud.databricks.com
+      http_path: /sql/1.0/warehouses/071d93c77fdf5fb2
+      schema: source
+      threads: 1
+      token: dapi2ab3890de73849c77bc775f3015eb849
+      type: databricks
+  target: dev
